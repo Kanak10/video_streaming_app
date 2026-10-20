@@ -8,7 +8,7 @@ services:
       - "8000:8000"
     image: fastapi_app
     environment:
-      - DATABASE_URL=postgresql://postgres:test123@db:5432/mydatabase
+      - DATABASE_URL=postgresql+psycopg2://postgres:test123@db:5432/mydatabase
     volumes:
       - ./:/app
 
@@ -23,6 +23,11 @@ services:
       POSTGRES_PASSWORD: test123
     volumes:
       - postgres_data:/var/lib/postgresql/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mydatabase"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
